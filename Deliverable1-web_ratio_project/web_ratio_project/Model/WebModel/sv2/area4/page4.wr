@@ -1,0 +1,55 @@
+<Page xmlns:gr="http://www.webratio.com/2006/WebML/Graph" xmlns:layout="http://www.webratio.com/2006/WebML/Layout" gr:x="5" gr:y="250" id="sv2#area4#page4" name="Add Crosswalk">
+  <ContentUnits>
+    <EntryUnit gr:x="0" gr:y="0" id="sv2#area4#page4#enu1" name="New Crosswalk" entity="ent1" customDescriptor="false" linkOrder="sv2#area4#page4#enu1#ln17">
+      <Link id="sv2#area4#page4#enu1#ln17" name="Add" to="sv2#area4#miu16" type="normal" validate="true" gr:bendpoints="151,-30,-174,-5">
+        <LinkParameter id="sv2#area4#page4#enu1#ln17#par6" name="location_location" source="sv2#area4#page4#enu1#fld4" target="sv2#area4#miu16.mov1#opm1#icu1#icp1"/>
+        <LinkParameter id="sv2#area4#page4#enu1#ln17#par3" name="positionY_positionY" source="sv2#area4#page4#enu1#fld1" target="sv2#area4#miu16.mov1#opm1#icu1#icp5"/>
+      </Link>
+      <Field id="sv2#area4#page4#enu1#fld4" name="positionX" type="float" modifiable="true" attribute="ent1#att3" preloaded="false"/>
+      <Field id="sv2#area4#page4#enu1#fld1" name="positionY" type="float" modifiable="true" attribute="ent1#att10"/>
+    </EntryUnit>
+    <DataUnit gr:x="120" gr:y="35" id="sv2#area4#page4#dau2" name="Added Crosswalk" entity="ent1">
+      <Selector id="sv2#area4#page4#dau2#su2" defaultPolicy="fill" booleanOperator="and">
+        <KeyCondition id="sv2#area4#page4#dau2#su2#kcond2" name="KeyCondition2" predicate="in" implied="false"/>
+      </Selector>
+    </DataUnit>
+  </ContentUnits>
+  <layout:Grid containerType="grid">
+    <layout:Row>
+      <layout:Cell colspan="12">
+        <layout:Unit unitId="sv2#area4#page4#enu1">
+          <layout:Link link="sv2#area4#page4#enu1#ln17"/>
+          <layout:Field field="sv2#area4#page4#enu1#fld4"/>
+          <layout:Field field="sv2#area4#page4#enu1#fld1"/>
+        </layout:Unit>
+      </layout:Cell>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+    </layout:Row>
+    <layout:Row>
+      <layout:Cell colspan="12">
+        <layout:Unit unitId="sv2#area4#page4#dau2"/>
+      </layout:Cell>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+    </layout:Row>
+  </layout:Grid>
+</Page>

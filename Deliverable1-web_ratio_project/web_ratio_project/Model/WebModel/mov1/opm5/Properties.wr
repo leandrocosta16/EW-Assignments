@@ -1,0 +1,25 @@
+<OperationModule xmlns:gr="http://www.webratio.com/2006/WebML/Graph" id="mov1#opm5" name="Edit" gr:x="145" gr:y="210">
+  <OperationUnits>
+    <InputCollectorUnit id="mov1#opm5#icu5" gr:x="0" gr:y="150">
+      <InputCollectorParameter id="mov1#opm5#icu5#icp3" name="positionX"/>
+      <InputCollectorParameter id="mov1#opm5#icu5#icp4" name="oid"/>
+      <OKLink id="mov1#opm5#icu5#oln18" name="OKFlow18" to="mov1#opm5#mfu1">
+        <LinkParameter id="mov1#opm5#icu5#oln18#par17" name="location_location" source="mov1#opm5#icu5#icp3" target="mov1#opm5#mfu1.ent1#att3"/>
+        <LinkParameter id="mov1#opm5#icu5#oln18#par20" name="oid_KeyCondition5 [oid]" source="mov1#opm5#icu5#icp4" target="mov1#opm5#mfu1#su5#kcond5.ent1#att2"/>
+        <LinkParameter id="mov1#opm5#icu5#oln18#par9" name="positionY_positionY" source="mov1#opm5#icu5#icp6" target="mov1#opm5#mfu1.ent1#att10"/>
+      </OKLink>
+      <InputCollectorParameter id="mov1#opm5#icu5#icp6" name="positionY"/>
+    </InputCollectorUnit>
+    <KOCollectorUnit id="mov1#opm5#kocu3" name="KO Port1" gr:x="700" gr:y="0"/>
+    <OKCollectorUnit id="mov1#opm5#okcu3" name="OK Port1" gr:x="700" gr:y="300">
+      <OutputCollectorParameter id="mov1#opm5#okcu3#ocp3" name="oid"/>
+    </OKCollectorUnit>
+    <ModifyUnit gr:x="330" gr:y="60" id="mov1#opm5#mfu1" name="update crosswalk" entity="ent1">
+      <Selector id="mov1#opm5#mfu1#su5" defaultPolicy="fill" booleanOperator="and">
+        <KeyCondition id="mov1#opm5#mfu1#su5#kcond5" name="KeyCondition5" predicate="in" implied="false"/>
+      </Selector>
+      <KOLink id="mov1#opm5#mfu1#kln12" name="KOFlow1" to="mov1#opm5#kocu3"/>
+      <OKLink id="mov1#opm5#mfu1#oln16" name="OKFlow1" to="mov1#opm5#okcu3"/>
+    </ModifyUnit>
+  </OperationUnits>
+</OperationModule>
