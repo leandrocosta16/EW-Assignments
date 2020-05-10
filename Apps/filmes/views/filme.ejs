@@ -1,0 +1,36 @@
+<%- include('header'); -%>
+
+    <h1>FILMES</h1>
+
+    <br />
+    
+    <a href="/filmes" class="button">Voltar à lista</a>
+
+    <br />
+    <br />
+    
+    <dl>
+        <dt>TITLE</dt>
+        <dd><%=list["title"]%></dd>
+
+        <dt>YEAR</dt>
+        <dd><%=list["year"]%></dd>
+
+        <dt>CAST</dt>
+        <%for (item in list["cast"]) {%>
+        <dd><%=list["cast"][item]%></dd>
+        <%}%>
+
+        <dt>GENRE</dt>
+        <%for (item in list["genres"]) {%>
+        <dd><%=list["genres"][item]%></dd>
+        <%}%>
+
+    </dl>
+
+<br />
+<br />
+
+<p style="color:gray;text-align:center;">ID: <%=list["_id"]%></p>
+
+<%- include('footer'); -%>

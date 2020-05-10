@@ -1,0 +1,107 @@
+body {
+  padding: 50px;
+  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
+}
+
+a {
+  /*color: #00B7FF;*/
+}
+
+.button:hover, button:hover {
+background:#ffffe0;
+}
+
+.lista button {
+background:#ffcccb;
+}
+
+.lista button:hover {
+background:red;
+}
+
+
+.lista tr:nth-child(even) {
+
+}
+
+.lista tr:nth-child(odd) {
+background:#‎d3d3d3;
+}
+
+.lista tr td:nth-child(2n+1) {
+background:#F8F8F8;
+}
+
+.lista tr:first-child {
+background:#000000;
+color:#ffffff;
+text-align:center;
+}
+
+.lista tr:first-child th {
+text-align:center !important;
+}
+
+.lista td, .lista th {
+padding-left:20px;
+padding-right:20px;
+}
+
+.apagar {
+width:100px !important;
+background:#000000 !important;
+border:none !important;
+}
+
+h1 {
+font-weight:bold;
+text-align:center;
+background:beige;
+border-top:5px solid brown;
+border-bottom:5px solid brown;
+}
+
+table.noBorder, .noBorder td {
+border:none;
+margin:0;
+padding-top:0;
+padding-bottom:0;
+}
+
+td {
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+button.removeRow::after {
+  content: "-";
+}
+
+button.newRow::after {
+  content: "+";
+}
+
+input[type=text]{
+width:300px;
+}
+
+dt {
+background:#333333;
+color:#ffffff;
+font-weight:bold;
+margin-top:35px;
+padding:3px 5px;
+}
+
+dt:first-child {
+margin-top:0px;
+}
+
+dd {
+color:#333333;
+margin-top:10px;
+border-bottom:1px dashed #D3D3D3;
+box-shadow: 1px 1px 5px #888888;
+padding:1px 5px;
+}
