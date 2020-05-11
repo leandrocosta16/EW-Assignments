@@ -18,17 +18,26 @@ router.get('/cars/:idCar', function(req, res) {
       .catch(erro => res.status(500).jsonp(erro))
 })
 
+//GET ONE BY MATRICULA
+router.get('/cars/matricula/:matriculaCar', function(req, res) {
+  var matricula = req.params.matriculaCar;
+  Cars.oneMatricula(matricula)
+    .then(dados => res.jsonp(dados))
+    .catch(erro => res.status(500).jsonp(erro))
+})
+
 //POST
 router.post('/cars', function(req, res) {
-    Cars.insert(req.body.latitude,req.body.longitude, req.body.matricula)
+    Cars.insert(req.body.latitude,req.body.longitude, req.body.matricula, req.body.passadeira_id)
       .then(dados => res.jsonp(dados))
+      //FAZER PEDIDO AO SPWS PARA INCREMENTAR NCARROS
       .catch(erro => res.status(500).jsonp(erro))
 })
 
 //UPDATE
 router.put('/cars/:idCar', function(req, res) {
     var id = req.params.idCar;
-    Cars.update(id, req.body.latitude, req.body.longitude, req.body.matricula)
+    Cars.update(id, req.body.latitude, req.body.longitude)
       .then(dados => res.jsonp(dados))
       .catch(erro => res.status(500).jsonp(erro))
 })
@@ -37,6 +46,7 @@ router.put('/cars/:idCar', function(req, res) {
 router.delete('/cars/:idCar', function(req,res){
   Cars.delete(req.params.idCar)
   .then(dados => res.jsonp(dados))
+  //FAZER PEDIDO AO SPWS PARA DECREMENTAR NCARROS
   .catch(erro => res.status(500).jsonp(erro))
 })
 

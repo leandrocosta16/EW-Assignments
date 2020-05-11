@@ -16,12 +16,16 @@ module.exports.one = (id) => {
     return queries.getById(id)
 }
 
-module.exports.insert = (latitude,longitude, matricula) => {
-    return queries.insert(latitude,longitude, matricula)
+module.exports.oneMatricula = (matricula) => {
+    return queries.getByMatricula(matricula)
 }
 
-module.exports.update = (id,latitude,longitude, matricula) => {
-    return queries.update(id,latitude,longitude, matricula)
+module.exports.insert = (latitude,longitude, matricula, passadeira_id) => {
+    return queries.insert(latitude,longitude, matricula, passadeira_id)
+}
+
+module.exports.update = (id,latitude,longitude) => {
+    return queries.update(id,latitude,longitude)
 }
 
 module.exports.delete = (id) => {

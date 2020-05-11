@@ -9,7 +9,8 @@ class Tables {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         latitude REAL,
         longitude REAL,
-        matricula TEXT
+        matricula TEXT,
+        passadeira_id INTEGER
         )`
     return this.dao.run(sql)
   }

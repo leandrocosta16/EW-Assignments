@@ -15,24 +15,29 @@ class Queries {
       [id])
   }
 
+  getByMatricula(matricula) {
+    return this.dao.get(
+      `SELECT * FROM Cars WHERE matricula = ?`,
+      [matricula])
+  }
+
 
   //INSERT DATA
-  insert(latitude,longitude, matricula) {
+  insert(latitude, longitude, matricula, passadeira_id) {
     return this.dao.run(
-      'INSERT INTO Cars (latitude, longitude, matricula) VALUES (?, ?, ?)',
-      [latitude, longitude, matricula])
+      'INSERT INTO Cars (latitude, longitude, matricula, passadeira_id) VALUES (?, ?, ?, ?)',
+      [latitude, longitude, matricula, passadeira_id])
   }
 
 
   //UPDATE DATA
-  update(id, latitude, longitude, matricula) {
+  update(id, latitude, longitude) {
     return this.dao.run(
       `UPDATE Cars
       SET latitude = ?,
-        longitude = ?,
-        matricula = ?
+        longitude = ?
       WHERE id = ?`,
-      [latitude, longitude, matricula, id]
+      [latitude, longitude, id]
     )
   }
 
