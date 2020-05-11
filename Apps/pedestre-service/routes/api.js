@@ -22,7 +22,7 @@ router.get('/pedestres/:idPedestre', function(req, res) {
 router.post('/pedestres', function(req, res) {
     Pedestres.insert(req.body.latitude,req.body.longitude, req.body.email, req.body.passadeira_id)
       .then(dados => res.jsonp(dados))
-      //FAZER PEDIDO AO SPWS PARA INCREMENTAR NCARROS
+      //FAZER PEDIDO AO SPWS PARA INCREMENTAR NPEDESTRES
       .catch(erro => res.status(500).jsonp(erro))
 })
 
@@ -38,7 +38,7 @@ router.put('/pedestres/:idPedestre', function(req, res) {
 router.delete('/pedestres/:idPedestre', function(req,res){
   Pedestres.delete(req.params.idPedestre)
   .then(dados => res.jsonp(dados))
-  //FAZER PEDIDO AO SPWS PARA DECREMENTAR NCARROS
+  //FAZER PEDIDO AO SPWS PARA DECREMENTAR NPEDESTRES
   .catch(erro => res.status(500).jsonp(erro))
 })
 
