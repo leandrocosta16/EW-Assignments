@@ -1,0 +1,84 @@
+<%- include('header'); -%>
+
+    <h1 style="border-color:#333333;padding:5px 0px;">CRUD - SPWS</h1>
+    
+    <br />
+    
+
+
+<%if(typeof lista !== 'undefined') {%>
+
+    <p><a href="/form" class="btn btn-info btn-lg">Adicionar Passadeira</a></p>
+
+    <hr>
+    <br>
+
+    <h2>PASSADEIRAS:</h2>
+
+    <table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <th>LATITUDE</th>
+        <th>LONGITUDE</th>
+        <th>PEDESTRES AGORA</th>
+        <th>CARROS AGORA</th>
+        <th>PEDESTRES TOTAL</th>
+        <th>CARROS TOTAL</th>
+        <th class="crud"></th>
+    </tr>
+
+  <% for (var i = 0; i < lista.length; i++) { %>
+    <tr>
+        <td><%=lista[i]["id"]%></td>
+        <td><%=lista[i]["latitude"]%></td>
+        <td><%=lista[i]["longitude"]%></td>
+        <td><%=lista[i]["nPdestrians"]%></td>
+        <td><%=lista[i]["nCars"]%></td>
+        <td><%=lista[i]["totalPdestrians"]%></td>
+        <td><%=lista[i]["totalCars"]%></td>
+        <td><a href="?id=<%=lista[i]["id"]%>" class="btn btn-secondary">Ver</a> <a href="/form/<%=lista[i]["id"]%>" class="btn btn-secondary">Update</a> <button type="button" class="btn btn-secondary" onclick="apagar(<%=lista[i]["id"]%>)">Apagar</button></td>
+    </tr>
+  <% } %>
+    </table>
+<% } else { %>
+    <p><a href="/" class="btn btn-secondary">Voltar à lista</a></p>
+    <br>
+    <h2>PASSADEIRA #<%=ficha["id"]%>:</h2>
+    <p><b>LATITUDE:</b> <%=ficha["latitude"]%></p>
+    <p><b>LONGITUDE:</b> <%=ficha["longitude"]%></p>
+    <p><b>PEDESTRES AGORA:</b> <%=ficha["nPdestrians"]%></p>
+    <p><b>CARROS AGORA:</b> <%=ficha["nCars"]%></p>
+    <p><b>PEDESTRES TOTAL:</b> <%=ficha["totalPdestrians"]%></p>
+    <p><b>CARROS TOTAL:</b> <%=ficha["totalCars"]%></p>
+    <br>
+    <p><a href="/form/<%=ficha["id"]%>" class="btn btn-secondary">Update</a> <button type="button" class="btn btn-secondary">Apagar</button></p>
+<% } %>
+
+<script>
+
+
+
+function apagar(id) {
+ axios.delete('/'+id)
+                .then(response => {
+                    //this.result.splice(id, 1)
+                    //console.log(this.result);
+                    window.location.reload(true);
+                });
+
+    /*$.ajax({
+        //type: 'DELETE',
+        method: 'DELETE',
+        url: 'http://localhost:8042/api/passadeiras/'+id,
+        success: function(result) {
+        alert("apagado");
+            // Do something with the result
+        }
+        error: function (result) {
+            console.log('Error:', result);
+        }
+    });*/
+}
+</script>
+    
+<%- include('footer'); -%>
