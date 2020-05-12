@@ -31,7 +31,7 @@ class Queries {
 
 
   //UPDATE DATA
-  update(id, latitude, longitude) {
+    update(id, latitude, longitude) {
     return this.dao.run(
       `UPDATE Cars
       SET latitude = ?,

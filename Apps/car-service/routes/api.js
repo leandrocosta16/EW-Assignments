@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const axios = require('axios');
+const lhostSPWS = require('../config/env').passadeiras
 
 var Cars = require('../controllers/cars');
 
@@ -28,25 +30,33 @@ router.get('/cars/matricula/:matriculaCar', function(req, res) {
 
 //POST
 router.post('/cars', function(req, res) {
+    var passadeira_id = req.body.passadeira_id;
     Cars.insert(req.body.latitude,req.body.longitude, req.body.matricula, req.body.passadeira_id)
-      .then(dados => res.jsonp(dados))
-      //FAZER PEDIDO AO SPWS PARA INCREMENTAR NCARROS
-      .catch(erro => res.status(500).jsonp(erro))
+    .then(dados => {
+        axios.put(lhostSPWS+'/api/plusCar', {passadeira_id: passadeira_id})
+        .then(dados => res.sendStatus(200))
+        .catch(erro => console.log(error))
+    })
+    .catch(erro => console.log(error))
 })
 
 //UPDATE
 router.put('/cars/:idCar', function(req, res) {
-    var id = req.params.idCar;
+    let id = req.params.idCar;
     Cars.update(id, req.body.latitude, req.body.longitude)
-      .then(dados => res.jsonp(dados))
+      .then(dados => res.sendStatus(200))
       .catch(erro => res.status(500).jsonp(erro))
 })
 
 //DELETE
 router.delete('/cars/:idCar', function(req,res){
+  var passadeira_id = req.body.passadeira_id;
   Cars.delete(req.params.idCar)
-  .then(dados => res.jsonp(dados))
-  //FAZER PEDIDO AO SPWS PARA DECREMENTAR NCARROS
+  .then(dados => {
+    axios.put(lhostSPWS+'/api/minusCar', {passadeira_id: passadeira_id})
+    .then(dados => res.sendStatus(200))
+    .catch(erro => console.log(erro))
+  })  
   .catch(erro => res.status(500).jsonp(erro))
 })
 

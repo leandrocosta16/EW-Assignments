@@ -66,6 +66,7 @@ router.post('/form', function(req, res) {
               res.redirect(303, '/')
             })
             .catch(erro => {
+                console.log(erro)
               res.render('error', {error: erro})
             })
 })

@@ -1,0 +1,58 @@
+<%- include('header'); -%>
+
+    <h2>SIMULAÇÃO</h2>
+    
+    <br />
+    
+<p><button type="button" class="btn btn-secondary" onclick="moveCar()">Mover Carro</button></p>
+
+<p><a href="/form" class="btn btn-info btn-lg">Adicionar Passadeira</a></p>
+
+
+
+
+<script>
+
+
+
+function moveCar() {
+axios({
+  method: 'POST',
+  url: '<%=lhostGateway%>/api/carMove',
+  headers: {}, 
+  data: {latitude: 12.760287, longitude: -90.323763, matricula: '03-44-VP'}
+})
+.then(function (response) {
+    alert(response)
+})
+.catch(function (error) {
+    alert(erro)
+});
+
+ /*axios.post('')
+                .then(response => {
+                    //this.result.splice(id, 1)
+                    //console.log(this.result);
+                    alert(555)
+                })
+                .catch(function (error) {
+                    alert(erro)
+                    console.log(error);
+                });*/
+
+    /*$.ajax({
+        //type: 'DELETE',
+        method: 'DELETE',
+        url: 'http://localhost:8042/api/passadeiras/'+id,
+        success: function(result) {
+        alert("apagado");
+            // Do something with the result
+        }
+        error: function (result) {
+            console.log('Error:', result);
+        }
+    });*/
+}
+</script>
+    
+<%- include('footer'); -%>
