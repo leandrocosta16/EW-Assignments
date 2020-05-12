@@ -35,6 +35,17 @@ class Queries {
     )
   }
 
+//Update contadores
+resetCounts(id) {
+    return this.dao.run(
+      `UPDATE Passadeiras
+      SET nPedestrians = 0,
+        nCars = 0
+      WHERE id = ?`,
+      [id]
+    )
+  }
+
 
   //DELETE DATA
   delete(id) {

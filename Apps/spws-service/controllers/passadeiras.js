@@ -8,7 +8,9 @@ const dao = new appDAO('./data/db.sqlite');
 const tables = new appTables(dao);
 const queries = new appQueries(dao);
 
-tables.createPassadeiras();
+module.exports.creatTables = () => {
+    tables.createPassadeiras();
+}
 
 module.exports.list = () => {
     return queries.getAll()
@@ -36,6 +38,10 @@ module.exports.minusCar = (id) => {
 
 module.exports.plusCar = (id) => {
     return queries.plusCar(id)
+}
+
+module.exports.resetCounts = (id) => {
+    return queries.resetCounts(id)
 }
 
 module.exports.isInRaio = (radius,latitude,longitude) => {

@@ -11,17 +11,14 @@ router.post('/carMove', function(req, res) {
     var latitude = req.body.latitude;
     var longitude = req.body.longitude;
     var matricula = req.body.matricula;
-    var radius = 20;
+    var radius = 10;
     axios.get(lhostSPWS+'/api/isInRaio?latitude=' + latitude + '&longitude=' + longitude + '&radius=' + radius)
             .then(dados => {
-                console.log('tessssssssssssssssssssssssssssst')
-                console.log(dados.data.found)
 
                 //Se passadeira próxima
                 if(dados.data.found == true) {//if(dados.data.radius == true) {
                     var passadeiraId = dados.data.passadeira_id
                     //Check if it exists already and if yes get car id by matricula
-                    //axios.get(lhostCars+'/api/cars/1')
                     axios.get(lhostCars+'/api/cars/matricula/'+matricula)
                         .then(dados => {
                             //se carro já inserido na db update dos dados
@@ -39,7 +36,6 @@ router.post('/carMove', function(req, res) {
                         })
                         .catch(erro => {
                           console.log(erro)
-                          //res.status(500).jsonp(erro)
                         })
                 }
 
@@ -55,14 +51,12 @@ router.post('/carMove', function(req, res) {
                     })
                     .catch(erro => {
                       console.log(erro)
-                      //res.status(500).jsonp(erro)
                     })
                 }
               
             })
             .catch(erro => {
               console.log(erro)
-              //res.status(500).jsonp(erro)
             })
 })
 

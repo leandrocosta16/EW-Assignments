@@ -5,6 +5,14 @@ const geolib = require('geolib');
 
 var Passadeiras = require('../controllers/passadeiras');
 
+Passadeiras.creatTables();
+
+//Reset cunters at startup
+  Passadeiras.list()
+   .then(dados => {
+    resetCounts(dados);
+})
+
 // ==CRUDD==
 //GET ALL
 router.get('/passadeiras', function(req, res) {
@@ -47,23 +55,18 @@ router.delete('/passadeiras/:idPassadeira', function(req,res){
 
 // ==OTHER==
 router.get('/isInRaio', function(req, res) {
-    latitude = req.query.latitude;
-    longitude = req.query.longitude;
-    raio = req.query.raio;
+    var latitude = req.query.latitude;
+    var longitude = req.query.longitude;
+    var raio = req.query.radius;
 
     var foundPassadeira = false;
     var passadeiraId = null;
 
-    //Passadeiras.isInRaio(raio, latitude, longitude)
-    //.then(dados => res.jsonp(dados))
-    //.catch(erro => res.status(500).jsonp(erro))
     Passadeiras.list()
      .then(dados => {
       let passadeiras = dados
         for (p of passadeiras) {
-          console.log(p.latitude)
           let r = radius(latitude,longitude, p.latitude, p.longitude, raio)
-          console.log(r)
           if ( r == true ) {
               foundPassadeira = true;
               passadeiraId = p.id
@@ -71,27 +74,11 @@ router.get('/isInRaio', function(req, res) {
               break;
           }
         }
-        //res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId})
      })
      .catch(erro => {
       console.log(erro)
-      res.status(500).jsonp(erro)
     })
 })
-
-function radius(lat1, long1, lat2, long2, radius) {
-/*getDistance(
-        { latitude: 51.5103, longitude: 7.49347 },
-        { latitude: "51° 31' N", longitude: "7° 28' E" }
-    );*/
-
-//returns false or true. radius = meters. checks if lat1 long1 are in a radius of x meters from lat2 long2
-return geolib.isPointWithinRadius(
-    { latitude: lat1, longitude: long1 },
-    { latitude: lat2, longitude: long2 },
-    20
-);
-}
 
 router.put('/minusCar', function(req,res){
   let passadeira_id = req.body.passadeira_id;
@@ -106,4 +93,29 @@ router.put('/plusCar', function(req,res){
   .catch(erro => console.log(erro))
 })
 
+
+function radius(lat1, long1, lat2, long2, radius) {
+//returns false or true. radius = meters. checks if lat1 long1 are in a radius of x meters from lat2 long2
+return geolib.isPointWithinRadius(
+    { latitude: lat1, longitude: long1 },
+    { latitude: lat2, longitude: long2 },
+    radius
+);
+
+/*Versão que calcula a distãncia entre duas coords. if carro < distancia = pumba
+getDistance(
+        { latitude: 51.5103, longitude: 7.49347 },
+        { latitude: "51° 31' N", longitude: "7° 28' E" }
+    );*/
+}
+
+function resetCounts(table) {
+        for (p of table) {
+            Passadeiras.resetCounts(p.id)
+            //.then(dados => console.log('starting services'))
+            //.catch(erro => console.log(erro))
+        }
+}
+
 module.exports = router;
+
