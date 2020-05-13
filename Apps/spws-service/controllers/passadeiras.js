@@ -40,6 +40,14 @@ module.exports.plusCar = (id) => {
     return queries.plusCar(id)
 }
 
+module.exports.plusPedestre = (id) => {
+    return queries.plusPedestre(id)
+}
+
+module.exports.minusPedestre = (id) => {
+    return queries.minusPedestre(id)
+}
+
 module.exports.resetCounts = (id) => {
     return queries.resetCounts(id)
 }
@@ -58,7 +66,7 @@ module.exports.isInRaio = (radius,latitude,longitude) => {
 
     //let closest = queries.closestPassadeira(latitude,longitude)
     //return queries.closestPassadeira(latitude,longitude)
-   
+
 }
 
 function radius(lat1, long1, lat2, long2, radius=8) {
@@ -72,5 +80,5 @@ geolib.isPointWithinRadius(
     { latitude: lat1, longitude: long1 },
     { latitude: lat2, longitude: long2 },
     radius
-);   
+);
 }

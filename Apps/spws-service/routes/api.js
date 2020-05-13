@@ -61,6 +61,7 @@ router.get('/isInRaio', function(req, res) {
 
     var foundPassadeira = false;
     var passadeiraId = null;
+    var safeToCross = false;
 
     Passadeiras.list()
      .then(dados => {
@@ -69,8 +70,12 @@ router.get('/isInRaio', function(req, res) {
           let r = radius(latitude,longitude, p.latitude, p.longitude, raio)
           if ( r == true ) {
               foundPassadeira = true;
-              passadeiraId = p.id
-              res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId})
+              passadeiraId = p.id;
+              if( p.nPedestrians == 0 ) {
+                safeToCross = true;
+              }
+
+              res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId, safe: safeToCross})
               break;
           }
         }
@@ -89,6 +94,19 @@ router.put('/minusCar', function(req,res){
 
 router.put('/plusCar', function(req,res){
   Passadeiras.plusCar(req.body.passadeira_id)
+  .then(dados => res.sendStatus(200))
+  .catch(erro => console.log(erro))
+})
+
+router.put('/minusPedestre', function(req,res){
+  let passadeira_id = req.body.passadeira_id;
+  Passadeiras.minusPedestre(passadeira_id)
+  .then(dados => res.sendStatus(200))
+  .catch(erro => console.log(erro))
+})
+
+router.put('/plusPedestre', function(req,res){
+  Passadeiras.plusPedestre(req.body.passadeira_id)
   .then(dados => res.sendStatus(200))
   .catch(erro => console.log(erro))
 })
@@ -118,4 +136,3 @@ function resetCounts(table) {
 }
 
 module.exports = router;
-

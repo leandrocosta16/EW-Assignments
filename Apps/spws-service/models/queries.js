@@ -69,6 +69,22 @@ resetCounts(id) {
     )
   }
 
+  minusPedestre(id) {
+    return this.dao.run(
+      `UPDATE Passadeiras SET nPedestrians = nPedestrians - 1 WHERE id = ?`,
+      [id]
+    )
+  }
+
+  plusPedestre(id) {
+    return this.dao.run(
+      `UPDATE Passadeiras SET nPedestrians = nPedestrians + 1 WHERE id = ?`,
+      [id]
+    )
+  }
+
+
+
 //Ordering by nearest latitude and longitude coordinates
 //ORDER BY ((lat-$user_lat)*(lat-$user_lat)) + ((lng - $user_lng)*(lng - $user_lng)) ASC
 closestPassadeira2(latitude,longitude) {
