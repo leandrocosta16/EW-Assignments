@@ -16,6 +16,10 @@ module.exports.one = (id) => {
     return queries.getById(id)
 }
 
+module.exports.oneEmail = (email) => {
+    return queries.getByEmail(email)
+}
+
 module.exports.insert = (latitude,longitude, email, passadeira_id) => {
     return queries.insert(latitude,longitude, email, passadeira_id)
 }

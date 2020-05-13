@@ -15,6 +15,11 @@ class Queries {
       [id])
   }
 
+  getByEmail(email) {
+    return this.dao.get(
+      `SELECT * FROM Pedestres WHERE email = ?`,
+      [email])
+  }
 
   //INSERT DATA
   insert(latitude, longitude, email, passadeira_id) {
