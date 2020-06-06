@@ -25,15 +25,16 @@ router.get('/cars/matricula/:matriculaCar', function(req, res) {
   var matricula = req.params.matriculaCar;
   Cars.oneMatricula(matricula)
     .then(dados => res.jsonp(dados))
-    .catch(erro => res.status(500).jsonp(erro))
+    .catch(erro => console.log(erro))
+    //res.status(500).jsonp(erro)
 })
 
 //POST
 router.post('/cars', function(req, res) {
-    var passadeira_id = req.body.passadeira_id;
+    var passadeira = req.body.passadeira_id;
     Cars.insert(req.body.latitude,req.body.longitude, req.body.matricula, req.body.passadeira_id)
     .then(dados => {
-        axios.put(lhostSPWS+'/api/plusCar', {passadeira_id: passadeira_id})
+        axios.put(lhostSPWS+'/api/plusCar', {passadeira_id: passadeira})
         .then(dados => res.sendStatus(200))
         .catch(erro => console.log(error))
     })
@@ -45,19 +46,23 @@ router.put('/cars/:idCar', function(req, res) {
     let id = req.params.idCar;
     Cars.update(id, req.body.latitude, req.body.longitude)
       .then(dados => res.sendStatus(200))
-      .catch(erro => res.status(500).jsonp(erro))
+      .catch(erro => console.log(error))
 })
 
 //DELETE
-router.delete('/cars/:idCar', function(req,res){
-  var passadeira_id = req.body.passadeira_id;
-  Cars.delete(req.params.idCar)
+router.delete('/cars/:idCar/:idPassadeira', function(req,res){
+
+//var passadeira = req.body.passadeira_id;
+var passadeira = req.params.idPassadeira;
+
+Cars.delete(req.params.idCar)
   .then(dados => {
-    axios.put(lhostSPWS+'/api/minusCar', {passadeira_id: passadeira_id})
+    axios.put(lhostSPWS+'/api/minusCar', {passadeira_id: passadeira})
     .then(dados => res.sendStatus(200))
     .catch(erro => console.log(erro))
-  })  
-  .catch(erro => res.status(500).jsonp(erro))
+  })
+  .catch(erro => console.log(error))
+
 })
 
 

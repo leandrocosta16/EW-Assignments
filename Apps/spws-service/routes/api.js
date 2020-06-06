@@ -74,11 +74,15 @@ router.get('/isInRaio', function(req, res) {
               if( p.nPedestrians == 0 ) {
                 safeToCross = true;
               }
-
-              res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId, safe: safeToCross})
+              console.log('FOUND crosswalk in radius')
+              return res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId, safe: safeToCross})
+              //return;
               break;
           }
         }
+        console.log('No crosswalk in radius')
+        return res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId, safe: safeToCross})
+        //return;
      })
      .catch(erro => {
       console.log(erro)
@@ -86,8 +90,7 @@ router.get('/isInRaio', function(req, res) {
 })
 
 router.put('/minusCar', function(req,res){
-  let passadeira_id = req.body.passadeira_id;
-  Passadeiras.minusCar(passadeira_id)
+  Passadeiras.minusCar(req.body.passadeira_id)
   .then(dados => res.sendStatus(200))
   .catch(erro => console.log(erro))
 })
@@ -99,8 +102,7 @@ router.put('/plusCar', function(req,res){
 })
 
 router.put('/minusPedestre', function(req,res){
-  let passadeira_id = req.body.passadeira_id;
-  Passadeiras.minusPedestre(passadeira_id)
+  Passadeiras.minusPedestre(req.body.passadeira_id)
   .then(dados => res.sendStatus(200))
   .catch(erro => console.log(erro))
 })

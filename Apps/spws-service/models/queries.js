@@ -14,6 +14,8 @@ class Queries {
       `SELECT * FROM Passadeiras WHERE id = ?`,
       [id])
   }
+  
+  
 
 
   //INSERT DATA
@@ -56,15 +58,16 @@ resetCounts(id) {
   }
 
   minusCar(id) {
+  console.log(id)
     return this.dao.run(
-      `UPDATE Passadeiras SET nCars = nCars - 1 WHERE id = ?`,
+      `UPDATE Passadeiras SET nCars = nCars-1 WHERE id = ?`,
       [id]
     )
   }
 
   plusCar(id) {
     return this.dao.run(
-      `UPDATE Passadeiras SET nCars = nCars + 1 WHERE id = ?`,
+      `UPDATE Passadeiras SET nCars = nCars+1 WHERE id = ?`,
       [id]
     )
   }
