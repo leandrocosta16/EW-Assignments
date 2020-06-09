@@ -12,9 +12,9 @@ var startLoc = [];
 var endLoc = [];
 
 var lastVertex = 1;
-var step = 5; // 50 = default; // metres / fast com zoom 14= 5
+var step = 0.4; // 5 | 50 = default; // metres / fast com zoom 14= 5
 var eol = [];
-var tickTimmer = 800;//100 default
+var tickTimmer = 100;//100 default
 
 var zoom = 19;//original vista afastada=14
 
@@ -30,6 +30,10 @@ var status = '';
 //Dummy temp vars for simulation only - not needed in real world scenario with pedestrian apps running
 //var pedestresCoords = [[41.5372315696, -8.4952368110],];
 var pedestresMarkers = [];
+
+var pedestres = {};
+var mail_count = 1;
+var pedestre_running = false;
 
 // called on body load
 function initialize() {
@@ -60,10 +64,15 @@ function initialize() {
           // Close the current InfoWindow.
           infoWindow.close();
 
+          //pedestre = createMarker(new google.maps.LatLng(c[0],c[1]), "Pedestre", c, "pedestre");
+          let mail = 'mei' + String(mail_count) + '@di.uminho.pt'
+          mail_count++;
+          pedestres[mail] = createMarker(new google.maps.LatLng(mapsMouseEvent.latLng.lat(), mapsMouseEvent.latLng.lng()), "Pedestre", c, "pedestre");
+          pedestre_running = true;
           // Create a new InfoWindow.
-          infoWindow = new google.maps.InfoWindow({position: mapsMouseEvent.latLng});
+          /*infoWindow = new google.maps.InfoWindow({position: mapsMouseEvent.latLng});
           infoWindow.setContent(mapsMouseEvent.latLng.toString());
-          infoWindow.open(map);
+          infoWindow.open(map);*/
         });
 }
 
@@ -166,6 +175,8 @@ function setRoutes() {
         };
         directionsService.route(request, makeRouteCallback(i, directionsDisplay[i]), rendererOptions);
     }
+
+var mainTimmer = setInterval(updateTimmer, 1000);
 }
 
 // called after getting route from directions service, does all the heavylifting
@@ -204,9 +215,14 @@ function makeRouteCallback(routeNum, disp, rendererOptions) {
             disp.setDirections(response);
 
             // create Markers
+            let ccc = 0;
             for (c of crosswalksCoords) {
                 crosswalksMarkers.push(createMarker(new google.maps.LatLng(c[0],c[1]), "Passadeira", c, "crosswalk"))
-                pedestresMarkers.push(createMarker(new google.maps.LatLng(c[0],c[1]-0.003), "Pedestre", c, "pedestre"))
+                /*if(ccc==0) {
+                    pedestre = createMarker(new google.maps.LatLng(c[0],c[1]), "Pedestre", c, "pedestre");
+                }
+                ccc++;*/
+                //pedestresMarkers.push(createMarker(new google.maps.LatLng(c[0],c[1]-0.003), "Pedestre", c, "pedestre"))
             }
 
             /*for (c of pedestresCoords) {
@@ -265,9 +281,14 @@ function animate(index, d, tick) {
     var p = polyLine[index].GetPointAtDistance(d);
 
     //UPDATE STUFF
-    $('#car-lat').text(p.lat().toFixed(7));
-    $('#car-long').text(p.lng().toFixed(7));
-    updateCar(p.lat().toFixed(7),p.lng().toFixed(7),'03-44-VP');
+    //==CAR
+    //$('#car-lat').text(p.lat().toFixed(7));
+    //$('#car-long').text(p.lng().toFixed(7));
+    //updateCar(p.lat().toFixed(7),p.lng().toFixed(7),'03-44-VP');
+    //==PEDESTRE
+    //if(pedestre_running==true) {
+    //    updatePedestre();
+    //}
 
     map.setCenter(new google.maps.LatLng(p.lat(), p.lng()));
     map.setZoom(zoom);
@@ -327,6 +348,9 @@ axios({
 
 
 function updateCar(lat,long,matri) {
+$('#car-lat').text(lat);
+$('#car-long').text(long);
+
 axios({
   method: 'POST',
   url: 'http://127.0.0.1:8888/api/carMove',
@@ -338,10 +362,132 @@ axios({
 /*.then(dados => {*/
 .then(function (response) {
     $('#noteficationStatus').text(response.data.note);
+        if(response.data.note == 'STOP: crosswalk with pedestrians') {
+            $('#noteficationStatus').removeClass();
+            $('#noteficationStatus').addClass('safe-red');
+        }
+        else if (response.data.note == 'CARE: Crosswalk close, but safe no pedestrians') {
+            $('#noteficationStatus').removeClass();
+            $('#noteficationStatus').addClass('safe-orange');
+        }
+        else {
+            $('#noteficationStatus').removeClass();
+            $('#noteficationStatus').addClass('safe-green');
+        }
     //alert('Carro moveu-se')
-    //console.log(lat)
+    console.log('updated car')
 })
 .catch(function (error) {
     console.log(erro)
 });
+}
+
+
+
+
+
+function updatePedestre(lat,long,mail,active) {
+if(active==true) {
+    $('#pedestre-lat').text(lat);
+    $('#pedestre-long').text(long);
+}
+
+axios({
+  method: 'POST',
+  url: 'http://127.0.0.1:8888/api/pedestreMove',
+  headers: {}, 
+  data: {latitude: lat, longitude: long, email: mail}
+})
+/*.then(dados => {*/
+.then(function (response) {
+    if(active==true) {
+        $('#pedestreNotification').text(response.data.note);
+        if(response.data.note == 'STOP: Crosswalk with cars.') {
+            $('#pedestreNotification').removeClass();
+            $('#pedestreNotification').addClass('safe-red');
+        }
+        else if (response.data.note == 'CARE: Crosswalk close.') {
+            $('#pedestreNotification').removeClass();
+            $('#pedestreNotification').addClass('safe-orange');
+        }
+        else {
+            $('#pedestreNotification').removeClass();
+            $('#pedestreNotification').addClass('safe-green');
+        }
+        console.log(mail + ' updated');
+    }
+    else {
+        console.log(mail + ' updated');
+    }
+})
+.catch(function (error) {
+    console.log(erro)
+});
+
+//animatePedestre(lat, long);
+
+}
+
+
+
+function updateTimmer() {
+    //Car
+    let lat = marker[0].getPosition().lat().toFixed(7);
+    let long = marker[0].getPosition().lng().toFixed(7);
+    updateCar(lat,long,'03-44-VP');
+
+    //PEDESTRE
+    if(pedestre_running==true) {
+        let last_lat = undefined;
+        let last_long = undefined;
+        let last_key = Object.keys(pedestres).pop()
+        for(var key in pedestres) {
+            let lat = pedestres[key].getPosition().lat().toFixed(7);
+            let long = pedestres[key].getPosition().lng().toFixed(7);
+            last_lat = lat;
+            last_long = long;
+            let mail = key;
+            if(key==last_key) {
+                updatePedestre(lat,long,mail,true);
+            }
+            else {
+                updatePedestre(lat,long,mail,false);
+            }
+        }
+        //updateSmarthphone();
+    }
+}
+
+/*function updateSmarthphone(lat,long){
+$('#pedestre-lat').text(lat);
+$('#pedestre-long').text(long);
+}*/
+
+var anim_pedestre = setInterval(animatePedestres, 100);
+
+function animatePedestres() {
+if(pedestre_running==true) {
+    for(var key in pedestres) {
+        let lat = pedestres[key].getPosition().lat().toFixed(7);
+        let long = pedestres[key].getPosition().lng().toFixed(7);
+
+        let new_lat = parseFloat(lat)+0.000001;
+        let new_lng = parseFloat(long)-0.000001;
+
+        pedestres[key].setPosition(new google.maps.LatLng(new_lat, new_lng));
+    }
+
+ /*   let lat = pedestre.getPosition().lat().toFixed(7);
+    let long = pedestre.getPosition().lng().toFixed(7);
+
+    let new_lat = parseFloat(lat)+0.000001;
+    let new_lng = parseFloat(long)-0.000001;
+
+    pedestre.setPosition(new google.maps.LatLng(new_lat, new_lng));*/
+
+}
+
+/*          // assign new route
+          marker.position = marker.destination;
+          marker.destination = newDestination;*/
 }

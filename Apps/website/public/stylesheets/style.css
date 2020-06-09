@@ -116,7 +116,8 @@ color:#90ee90;
 }
 
 .safe-red {
-color:#ff3687;
+/*color:#ff3687;*/
+color:red;
 }
 
 .safe-orange {
