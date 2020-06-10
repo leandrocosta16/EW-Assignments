@@ -11,10 +11,10 @@ router.post('/carMove', function(req, res) {
     var latitude = req.body.latitude;
     var longitude = req.body.longitude;
     var matricula = req.body.matricula;
-    var radius = 10;
+    var carRadius = req.body.radius;
     var notification = '';
     var lights = undefined;
-    axios.get(lhostSPWS+'/api/isInRaio?latitude=' + latitude + '&longitude=' + longitude + '&radius=' + radius + '&mode=cars')
+    axios.get(lhostSPWS+'/api/isInRaio?latitude=' + latitude + '&longitude=' + longitude + '&radius=' + carRadius + '&mode=cars')
             .then(dados => {
                 //Se passadeira próxima
                 if(dados.data.found == true) {//if(dados.data.radius == true) {
@@ -27,8 +27,6 @@ router.post('/carMove', function(req, res) {
                             return;})
                         .catch(erro => console.log(erro))*/
 
-                    console.log('aqui:')
-                    console.log(dados.data.light)
                     lights = dados.data.light;
 
                     //Is in Radius notification

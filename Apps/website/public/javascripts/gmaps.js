@@ -11,6 +11,10 @@ var infoWindow = null;
 var startLoc = [];
 var endLoc = [];
 
+var globalTimmer = 1000;
+var carRadius = 5;
+var pedestreRadius = 5;
+
 var lastVertex = 1;
 var step = 0.4; // 5 | 50 = default; // metres / fast com zoom 14= 5
 var eol = [];
@@ -34,11 +38,18 @@ var pedestresMarkers = [];
 var pedestres = {};
 var mail_count = 1;
 var pedestre_running = false;
+var pedestreMove = 0.000001;
+var pedestreTick = 100;
 
 //Car
 var lights = 'no-lights';
 var lightsTimmer = 1;
 var waitSeconds = 5;
+var lightsClock = undefined;
+
+var carStops = false;
+var carNotification = '';
+var stop = false;
 
 // called on body load
 function initialize() {
@@ -181,7 +192,7 @@ function setRoutes() {
         directionsService.route(request, makeRouteCallback(i, directionsDisplay[i]), rendererOptions);
     }
 
-var mainTimmer = setInterval(updateTimmer, 1000);
+var mainTimmer = setInterval(updateTimmer, globalTimmer);
 }
 
 // called after getting route from directions service, does all the heavylifting
@@ -279,28 +290,54 @@ function updatePoly(i, d) {
 
 // updates marker position to make the animation and update the polyline
 function animate(index, d, tick) {
-    if (d > eol[index]) {
-        marker[index].setPosition(endLocation[index].latlng);
-        return;
+
+    //if(carStops==false || (carStops==true && lights!='red' && carNotification!='STOP: Crosswalk with pedestrians')) {
+        if(carStops==false) {
+            stop=false;
+        }
+        else if(carStops==true) {
+            if(lights=='red' || carNotification=='STOP: Crosswalk with pedestrians') {
+                stop=true;
+            }
+            else {
+                stop=false;
+            }
+        }
+
+        //console.log('input:')
+        //console.log(carStops)
+        //console.log(stop)
+        if(stop==false) {
+        if (d > eol[index]) {
+            marker[index].setPosition(endLocation[index].latlng);
+            return;
+        }
+        var p = polyLine[index].GetPointAtDistance(d);
+
+        //UPDATE STUFF
+        //==CAR
+        //$('#car-lat').text(p.lat().toFixed(7));
+        //$('#car-long').text(p.lng().toFixed(7));
+        //updateCar(p.lat().toFixed(7),p.lng().toFixed(7),'03-44-VP');
+        //==PEDESTRE
+        //if(pedestre_running==true) {
+        //    updatePedestre();
+        //}
+
+        map.setCenter(new google.maps.LatLng(p.lat(), p.lng()));
+        map.setZoom(zoom);
+
+        marker[index].setPosition(p);
+        updatePoly(index, d);
+
+        timerHandle[index] = setTimeout("animate(" + index + "," + (d + step) + ")", tickTimmer);
     }
-    var p = polyLine[index].GetPointAtDistance(d);
 
-    //UPDATE STUFF
-    //==CAR
-    //$('#car-lat').text(p.lat().toFixed(7));
-    //$('#car-long').text(p.lng().toFixed(7));
-    //updateCar(p.lat().toFixed(7),p.lng().toFixed(7),'03-44-VP');
-    //==PEDESTRE
-    //if(pedestre_running==true) {
-    //    updatePedestre();
-    //}
+    else {
+        timerHandle[index] = setTimeout("animate(" + index + "," + d + ")", tickTimmer);
+    }
 
-    map.setCenter(new google.maps.LatLng(p.lat(), p.lng()));
-    map.setZoom(zoom);
-
-    marker[index].setPosition(p);
-    updatePoly(index, d);
-    timerHandle[index] = setTimeout("animate(" + index + "," + (d + step) + ")", tick || tickTimmer);
+    //timerHandle[index] = setTimeout("animate(" + index + "," + (d + step) + ")", tick || tickTimmer);
 }
 
 // start marker movement by updating marker position every 100 milliseconds i.e. tick value
@@ -360,19 +397,19 @@ axios({
   method: 'POST',
   url: 'http://127.0.0.1:8888/api/carMove',
   headers: {}, 
-  data: {latitude: lat, longitude: long, matricula: matri}
+  data: {latitude: lat, longitude: long, matricula: matri, radius: carRadius}
   //data: {latitude: 12.760287, longitude: -90.323763, matricula: '03-44-VP'}
   //data: {latitude: 40.760287, longitude: -30.323763, matricula: '03-44-VP'}
 })
 /*.then(dados => {*/
 .then(function (response) {
-    console.log(response.data)
+    carNotification = response.data.note;
     $('#noteficationStatus').text(response.data.note);
         if(response.data.note == 'STOP: Crosswalk with pedestrians') {
             $('#noteficationStatus').removeClass();
             $('#noteficationStatus').addClass('safe-red');
         }
-        else if (response.data.note == 'CARE: Crosswalk close, but no pedestrians') {
+        else if(response.data.note == 'CARE: Crosswalk close, but no pedestrians') {
             $('#noteficationStatus').removeClass();
             $('#noteficationStatus').addClass('safe-orange');
         }
@@ -381,21 +418,22 @@ axios({
             $('#noteficationStatus').addClass('safe-green');
         }
 
-        console.log('-----')
-        console.log(response.data.light)
         //LIGHTS
         if(response.data.light != undefined) {
             if(lights=='no-light') {
                 lights = response.data.light;
-                var lightsTimmer = setInterval(updateLights, 1000);;
+                lightsClock = setInterval(updateLights, 1000);
             }
         }
         else {
             //If out of crosswalk reset lights
-            clearInterval(lightsTimmer);
+            clearInterval(lightsClock);
+            lightsClock = undefined;
             lights='no-light';
+            lightsTimmer=1;
         }
-
+        console.log(lightsTimmer)
+ 
         if(lights == 'green') {
             $('#trafficLight').removeClass();
             $('#trafficLight').addClass('green-light');
@@ -427,11 +465,6 @@ axios({
             $('#carLight').text('None');
             $('#carLight').removeClass();
         }
-
-    //alert('Carro moveu-se')
-    console.log('updated car')
-    console.log(lights)
-    console.log(response.data.light)
 })
 .catch(function (error) {
     console.log(error)
@@ -441,20 +474,20 @@ axios({
 
 function updateLights() {
     if(lights == 'red') {
-        if(lightsTimmer == waitSeconds) {
+        if(lightsTimmer >= waitSeconds) {
+            lights = 'green';
+            lightsTimmer=1;//reset
+        }
+    }
+    else if(lights == 'green') {
+        if(lightsTimmer >= waitSeconds) {
             lights = 'orange';
             lightsTimmer=1;
         }
     }
-    else if(lights == 'green') {
-        if(lightsTimmer == waitSeconds) {
-            lights = 'red';
-            lightsTimmer=1;
-        }
-    }
     else if(lights == 'orange') {
-        if(lightsTimmer == 2) {
-            lights = 'green';
+        if(lightsTimmer >= 2) {
+            lights = 'red';
             lightsTimmer=1;
         }
     }
@@ -473,7 +506,7 @@ axios({
   method: 'POST',
   url: 'http://127.0.0.1:8888/api/pedestreMove',
   headers: {}, 
-  data: {latitude: lat, longitude: long, email: mail}
+  data: {latitude: lat, longitude: long, email: mail, radius: pedestreRadius}
 })
 /*.then(dados => {*/
 .then(function (response) {
@@ -491,10 +524,10 @@ axios({
             $('#pedestreNotification').removeClass();
             $('#pedestreNotification').addClass('safe-green');
         }
-        console.log(mail + ' updated');
+        //console.log(mail + ' updated');
     }
     else {
-        console.log(mail + ' updated');
+        //console.log(mail + ' updated');
     }
 })
 .catch(function (error) {
@@ -540,7 +573,7 @@ $('#pedestre-lat').text(lat);
 $('#pedestre-long').text(long);
 }*/
 
-var anim_pedestre = setInterval(animatePedestres, 100);
+var anim_pedestre = setInterval(animatePedestres, pedestreTick);
 
 function animatePedestres() {
 if(pedestre_running==true) {
@@ -548,8 +581,8 @@ if(pedestre_running==true) {
         let lat = pedestres[key].getPosition().lat().toFixed(7);
         let long = pedestres[key].getPosition().lng().toFixed(7);
 
-        let new_lat = parseFloat(lat)+0.000001;
-        let new_lng = parseFloat(long)-0.000001;
+        let new_lat = parseFloat(lat)+pedestreMove;
+        let new_lng = parseFloat(long)-pedestreMove;
 
         pedestres[key].setPosition(new google.maps.LatLng(new_lat, new_lng));
     }

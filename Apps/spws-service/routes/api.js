@@ -55,7 +55,7 @@ router.delete('/passadeiras/:idPassadeira', function(req,res){
 //Traffic Lights API (It Should be an external API, but here it is simulated, random generated)
 router.get('/lights/:idPassadeira', function(req,res){
   let idPassadeira = req.params.idPassadeira;
-  let color = color();
+  let color = colour();
   return res.jsonp({light:color})
 })
 
@@ -106,7 +106,8 @@ router.get('/isInRaio', function(req, res) {
 })
 
 function colour() {
-let choiceColor = ['red', 'orange', 'green'];
+//let choiceColor = ['red', 'orange', 'green'];
+let choiceColor = ['red','green'];
 let randomColor = choiceColor[Math.floor(Math.random() * choiceColor.length)];
 return randomColor;
 }

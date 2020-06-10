@@ -4,12 +4,19 @@ height:100%;
 
 body {
 height: 100%;
-padding: 20px;
+/*padding: 20px;*/
 /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
 }
 
 a {
   /*color: #00B7FF;*/
+}
+
+.canvas-bg {
+position: absolute;
+top: 0;
+left: 0;
+background-color: black;
 }
 
 .button:hover, button:hover {
@@ -149,3 +156,39 @@ background:url(../images/orange.png);
 .no-light {
 background:url(../images/no-lights.png);
 }
+
+#simulation {
+display:inline;
+}
+
+#config-main {
+position:relative;
+}
+
+#config {
+padding-top:70px;
+z-index:50;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+color:#ffffff;
+text-align: center;
+}
+
+#config input {
+width:80px;
+}
+
+#config-inner {
+text-align:left;
+width:600px;
+display:inline-block;
+margin-top:15px;
+background:rgba(222,222,222,0.9);
+padding:20px 30px;
+border:1px solid #333333;
+border-radius:3px;
+color:#333333;
+}
+
