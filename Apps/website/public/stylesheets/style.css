@@ -123,3 +123,29 @@ color:red;
 .safe-orange {
 color:#ffca00;
 }
+
+#trafficLight {
+width:255px;
+height:100px;
+display:inline-block;
+position:fixed;
+top:0;
+right:600px;
+z-index: 99;
+}
+
+.green-light {
+background:url(../images/green.png);
+}
+
+.red-light {
+background:url(../images/red.png);
+}
+
+.orange-light {
+background:url(../images/orange.png);
+}
+
+.no-light {
+background:url(../images/no-lights.png);
+}

@@ -12,17 +12,31 @@ router.post('/carMove', function(req, res) {
     var longitude = req.body.longitude;
     var matricula = req.body.matricula;
     var radius = 10;
-    axios.get(lhostSPWS+'/api/isInRaio?latitude=' + latitude + '&longitude=' + longitude + '&radius=' + radius)
+    var notification = '';
+    var lights = undefined;
+    axios.get(lhostSPWS+'/api/isInRaio?latitude=' + latitude + '&longitude=' + longitude + '&radius=' + radius + '&mode=cars')
             .then(dados => {
                 //Se passadeira próxima
                 if(dados.data.found == true) {//if(dados.data.radius == true) {
                     var passadeiraId = dados.data.passadeira_id;
 
+                    //Traffic lights API
+                    /*axios.get(lhostSPWS+'/api/lights/'+passadeiraId)
+                        .then(dados => {
+                            var light = dados.data.light;
+                            return;})
+                        .catch(erro => console.log(erro))*/
+
+                    console.log('aqui:')
+                    console.log(dados.data.light)
+                    lights = dados.data.light;
+
+                    //Is in Radius notification
                     if(dados.data.safe == true) {
-                        var notification = 'CARE: Crosswalk close, but safe no pedestrians'
+                        notification = 'CARE: Crosswalk close, but no pedestrians';
                     }
                     else {
-                        var notification = 'STOP: crosswalk with pedestrians'
+                        notification = 'STOP: Crosswalk with pedestrians';
                     }
 
                     //Check if it exists already and if yes get car id by matricula
@@ -34,7 +48,7 @@ router.post('/carMove', function(req, res) {
                                 //.then(dados => res.sendStatus(200))
                                 .then(dados => {
                                     console.log(notification)
-                                    return res.jsonp({note: notification})
+                                    return res.jsonp({note: notification, light: lights})
                                 })
                                 .catch(erro => console.log(erro))
                             }
@@ -44,7 +58,7 @@ router.post('/carMove', function(req, res) {
                                 //.then(dados => res.sendStatus(200))
                                 .then(dados => {
                                     console.log(notification)
-                                    return res.jsonp({note: notification})
+                                    return res.jsonp({note: notification, light: lights})
                                 })
                                 .catch(erro => console.log(erro))
                             }
@@ -56,7 +70,8 @@ router.post('/carMove', function(req, res) {
 
                 //Se passadeira não próxima, confirmar se antes o carro na db estava e apagar se sim
                 else {
-                    var notification = 'SAFE: no crosswalk nearby'
+                    lights = undefined;
+                    notification = 'SAFE: No crosswalks nearby'
                     axios.get(lhostCars+'/api/cars/matricula/'+matricula)
                     .then(dados => {
                         if(dados.data) {
@@ -65,7 +80,7 @@ router.post('/carMove', function(req, res) {
                             //.then(dados => res.sendStatus(200))
                             .then(dados => {
                                 console.log(notification)
-                                return res.jsonp({note: notification})
+                                return res.jsonp({note: notification, light: lights})
                             })
                             .catch(erro => console.log(erro))
                         }
@@ -95,17 +110,17 @@ router.post('/pedestreMove', function(req, res) {
     var longitude = req.body.longitude;
     var email = req.body.email;
     var radius = 10;
-    axios.get(lhostSPWS+'/api/isInRaio?latitude=' + latitude + '&longitude=' + longitude + '&radius=' + radius)
+    axios.get(lhostSPWS+'/api/isInRaio?latitude=' + latitude + '&longitude=' + longitude + '&radius=' + radius + '&mode=pedestres')
             .then(dados => {
                 //Se passadeira próxima
                 if(dados.data.found == true) {//if(dados.data.radius == true) {
                     var passadeiraId = dados.data.passadeira_id;
 
                     if(dados.data.safe == true) {
-                        var notification = 'CARE: Crosswalk close.'
+                        var notification = 'Crosswalk close but no cars'
                     }
                     else {
-                        var notification = 'STOP: Crosswalk with cars.'
+                        var notification = 'Crosswalk with cars'
                     }
 
                     //Check if it exists already and if yes get car id by email
@@ -139,7 +154,7 @@ router.post('/pedestreMove', function(req, res) {
 
                 //Se passadeira não próxima, confirmar se antes o carro na db estava e apagar se sim
                 else {
-                    var notification = 'SAFE: no crosswalk.'
+                    var notification = 'No crosswalks'
                     axios.get(lhostPedestres+'/api/pedestres/email/'+email)
                     .then(dados => {
                         if(dados.data) {

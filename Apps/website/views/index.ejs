@@ -4,11 +4,13 @@
     
     <br />
     
-<p><button type="button" class="btn btn-secondary" onclick="moveCar()">Mover Carro</button></p>
+<!--<p><button type="button" class="btn btn-secondary" onclick="moveCar()">Mover Carro</button></p>-->
 
 
 
-    <h2 style="margin-top:0px;">SIMULATION</h2>
+    <h2 style="margin-top:0px;margin-bottom:0px;">SIMULATION</h2>
+<div id="trafficLight" class="no-light"></div>
+
 <div style="text-align:center;position:fixed;top:0px;right:0px;z-index:200;">
     <div id="consola-carro" style="text-align:left;display:inline-block;width:587px;height:320px;background:#333333 url(/images/painel.png);color:#ffffff;padding:70px 110px;">
         <div id="route-select">
@@ -33,21 +35,22 @@
             <p><b>POSITION:</b>
                 <br><span id="car-lat">0.0</span> LAT, <span id="car-long">0.0</span> LONG</p>
             <p><b>STATUS:</b> <span id="noteficationStatus" class="safe-green">Safe, no pedestrians.</span></p>
+            <p><b>TRAFFIC LIGHT:</b> <span id="carLight">None</span></p>
         </div>
     </div>
 </div>
 
 <div style="text-align:center;position:fixed;bottom:0px;right:0px;z-index:190;">
-    <div id="consola-carro" style="text-align:left;display:inline-block;width:213px;height:500px;background:url(/images/nokia_33110.png);color:#ffffff;padding:70px 110px;">
+    <div id="consola-carro" style="text-align:left;display:inline-block;width:213px;height:500px;background:url(/images/nokia_33110.png) no-repeat;color:#ffffff;padding:70px 110px;">
         <div id="pedestre-data" style="position:absolute;background:#329367;top:120px;left:28px;width:155px;height:116px;border-radius:15px;color:#000000;padding:5px 8px;font-size:12px;">
             <p style="margin:0px;margin-bottom:5px;"><b>POSITION:</b>
                 <br><span id="pedestre-lat">0.0</span>, <span id="pedestre-long">0.0</span></p>
-            <p style="margin:0px;"><b>STATUS:</b> <br><span id="pedestreNotification" class="safe-green">SAFE: no crosswalk.</span></p>
+            <p style="margin:0px;"><b>STATUS:</b> <br><span id="pedestreNotification" class="safe-green">No crosswalks.</span></p>
         </div>
     </div>
 </div>
 
-    <br><br>
+    <br>
 
     <div id="map_canvas" style="width:100%;height:100%;"></div>
 

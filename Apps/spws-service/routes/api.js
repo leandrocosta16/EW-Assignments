@@ -51,17 +51,25 @@ router.delete('/passadeiras/:idPassadeira', function(req,res){
   .catch(erro => res.status(500).jsonp(erro))
 })
 
-
-
 // ==OTHER==
+//Traffic Lights API (It Should be an external API, but here it is simulated, random generated)
+router.get('/lights/:idPassadeira', function(req,res){
+  let idPassadeira = req.params.idPassadeira;
+  let color = color();
+  return res.jsonp({light:color})
+})
+
+//is in Radius
 router.get('/isInRaio', function(req, res) {
     var latitude = req.query.latitude;
     var longitude = req.query.longitude;
     var raio = req.query.radius;
+    var mode = req.query.mode;
 
     var foundPassadeira = false;
     var passadeiraId = null;
     var safeToCross = false;
+    var color = undefined;
 
     Passadeiras.list()
      .then(dados => {
@@ -71,23 +79,37 @@ router.get('/isInRaio', function(req, res) {
           if ( r == true ) {
               foundPassadeira = true;
               passadeiraId = p.id;
-              if( p.nPedestrians == 0 ) {
-                safeToCross = true;
+              if(mode=='cars') {
+                color = colour();
+                if( p.nPedestrians == 0 ) {
+                  safeToCross = true;
+                }
+              }
+              else if(mode=='pedestres') {
+                if( p.nCars == 0 ) {
+                  safeToCross = true;
+                }
               }
               console.log('FOUND crosswalk in radius')
-              return res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId, safe: safeToCross})
+              return res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId, safe: safeToCross, light: color})
               //return;
               break;
           }
         }
         console.log('No crosswalk in radius')
-        return res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId, safe: safeToCross})
+        return res.jsonp({found: foundPassadeira, passadeira_id: passadeiraId, safe: safeToCross, light: color})
         //return;
      })
      .catch(erro => {
       console.log(erro)
     })
 })
+
+function colour() {
+let choiceColor = ['red', 'orange', 'green'];
+let randomColor = choiceColor[Math.floor(Math.random() * choiceColor.length)];
+return randomColor;
+}
 
 router.put('/minusCar', function(req,res){
   Passadeiras.minusCar(req.body.passadeira_id)

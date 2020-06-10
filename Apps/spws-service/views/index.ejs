@@ -32,9 +32,9 @@
         <td><%=lista[i]["id"]%></td>
         <td><%=lista[i]["latitude"]%></td>
         <td><%=lista[i]["longitude"]%></td>
-        <td><%=lista[i]["nPdestrians"]%></td>
+        <td><%=lista[i]["nPedestrians"]%></td>
         <td><%=lista[i]["nCars"]%></td>
-        <td><%=lista[i]["totalPdestrians"]%></td>
+        <td><%=lista[i]["totalPedestrians"]%></td>
         <td><%=lista[i]["totalCars"]%></td>
         <td><a href="?id=<%=lista[i]["id"]%>" class="btn btn-secondary">Ver</a> <a href="/form/<%=lista[i]["id"]%>" class="btn btn-secondary">Update</a> <button type="button" class="btn btn-secondary" onclick="apagar(<%=lista[i]["id"]%>)">Apagar</button></td>
     </tr>
@@ -46,9 +46,9 @@
     <h2>PASSADEIRA #<%=ficha["id"]%>:</h2>
     <p><b>LATITUDE:</b> <%=ficha["latitude"]%></p>
     <p><b>LONGITUDE:</b> <%=ficha["longitude"]%></p>
-    <p><b>PEDESTRES AGORA:</b> <%=ficha["nPdestrians"]%></p>
+    <p><b>PEDESTRES AGORA:</b> <%=ficha["nPedestrians"]%></p>
     <p><b>CARROS AGORA:</b> <%=ficha["nCars"]%></p>
-    <p><b>PEDESTRES TOTAL:</b> <%=ficha["totalPdestrians"]%></p>
+    <p><b>PEDESTRES TOTAL:</b> <%=ficha["totalPedestrians"]%></p>
     <p><b>CARROS TOTAL:</b> <%=ficha["totalCars"]%></p>
     <br>
     <p><a href="/form/<%=ficha["id"]%>" class="btn btn-secondary">Update</a> <button type="button" class="btn btn-secondary">Apagar</button></p>

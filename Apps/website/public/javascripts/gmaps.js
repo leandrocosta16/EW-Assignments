@@ -35,6 +35,11 @@ var pedestres = {};
 var mail_count = 1;
 var pedestre_running = false;
 
+//Car
+var lights = 'no-lights';
+var lightsTimmer = 1;
+var waitSeconds = 5;
+
 // called on body load
 function initialize() {
 
@@ -361,12 +366,13 @@ axios({
 })
 /*.then(dados => {*/
 .then(function (response) {
+    console.log(response.data)
     $('#noteficationStatus').text(response.data.note);
-        if(response.data.note == 'STOP: crosswalk with pedestrians') {
+        if(response.data.note == 'STOP: Crosswalk with pedestrians') {
             $('#noteficationStatus').removeClass();
             $('#noteficationStatus').addClass('safe-red');
         }
-        else if (response.data.note == 'CARE: Crosswalk close, but safe no pedestrians') {
+        else if (response.data.note == 'CARE: Crosswalk close, but no pedestrians') {
             $('#noteficationStatus').removeClass();
             $('#noteficationStatus').addClass('safe-orange');
         }
@@ -374,15 +380,86 @@ axios({
             $('#noteficationStatus').removeClass();
             $('#noteficationStatus').addClass('safe-green');
         }
+
+        console.log('-----')
+        console.log(response.data.light)
+        //LIGHTS
+        if(response.data.light != undefined) {
+            if(lights=='no-light') {
+                lights = response.data.light;
+                var lightsTimmer = setInterval(updateLights, 1000);;
+            }
+        }
+        else {
+            //If out of crosswalk reset lights
+            clearInterval(lightsTimmer);
+            lights='no-light';
+        }
+
+        if(lights == 'green') {
+            $('#trafficLight').removeClass();
+            $('#trafficLight').addClass('green-light');
+
+            $('#carLight').text('Green');
+            $('#carLight').removeClass();
+            $('#carLight').addClass('safe-green');
+        }
+        else if(lights == 'red') {
+            $('#trafficLight').removeClass();
+            $('#trafficLight').addClass('red-light');
+
+            $('#carLight').text('Red');
+            $('#carLight').removeClass();
+            $('#carLight').addClass('safe-red');
+        }
+        else if(lights == 'orange') {
+            $('#trafficLight').removeClass();
+            $('#trafficLight').addClass('orange-light');
+
+            $('#carLight').text('Orange');
+            $('#carLight').removeClass();
+            $('#carLight').addClass('safe-orange');
+        }
+        else {
+            $('#trafficLight').removeClass();
+            $('#trafficLight').addClass('no-light');
+
+            $('#carLight').text('None');
+            $('#carLight').removeClass();
+        }
+
     //alert('Carro moveu-se')
     console.log('updated car')
+    console.log(lights)
+    console.log(response.data.light)
 })
 .catch(function (error) {
-    console.log(erro)
+    console.log(error)
 });
 }
 
 
+function updateLights() {
+    if(lights == 'red') {
+        if(lightsTimmer == waitSeconds) {
+            lights = 'orange';
+            lightsTimmer=1;
+        }
+    }
+    else if(lights == 'green') {
+        if(lightsTimmer == waitSeconds) {
+            lights = 'red';
+            lightsTimmer=1;
+        }
+    }
+    else if(lights == 'orange') {
+        if(lightsTimmer == 2) {
+            lights = 'green';
+            lightsTimmer=1;
+        }
+    }
+    lightsTimmer++;
+}
 
 
 
@@ -402,11 +479,11 @@ axios({
 .then(function (response) {
     if(active==true) {
         $('#pedestreNotification').text(response.data.note);
-        if(response.data.note == 'STOP: Crosswalk with cars.') {
+        if(response.data.note == 'Crosswalk with cars') {
             $('#pedestreNotification').removeClass();
             $('#pedestreNotification').addClass('safe-red');
         }
-        else if (response.data.note == 'CARE: Crosswalk close.') {
+        else if (response.data.note == 'Crosswalk close but no cars') {
             $('#pedestreNotification').removeClass();
             $('#pedestreNotification').addClass('safe-orange');
         }
