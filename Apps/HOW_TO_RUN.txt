@@ -1,0 +1,14 @@
+Para correr:
+na diretoria onde está presente o ficheiro docker-compose.yml (/Apps):
+
+docker-compose up -d
+
+Desta forma faz pull às docker images presentes no nosso repositório e faz imediatamente run a todos os serviços.
+
+depois basta abrir localhost:8333 no browser para ver a simulação
+
+ou localhost:8042/crud para gerir as passadeiras
+
+para parar e eliminar os containers:
+
+docker-compose down
