@@ -20,6 +20,13 @@ router.get('/pedestres/:idPedestre', function(req, res) {
       .catch(erro => console.log(erro))
 })
 
+router.get('/passadeira/:idPassadeira', function(req, res) {
+    var id = req.params.idPassadeira;
+    Pedestres.passadeira(id)
+      .then(dados => res.status(200).jsonp(dados))
+      .catch(erro => console.log(erro))
+})
+
 //GET ONE BY EMAIL
 router.get('/pedestres/email/:emailPedestre', function(req, res) {
   var email = req.params.emailPedestre;

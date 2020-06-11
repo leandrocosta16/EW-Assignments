@@ -20,6 +20,13 @@ router.get('/cars/:idCar', function(req, res) {
       .catch(erro => res.status(500).jsonp(erro))
 })
 
+router.get('/passadeira/:idPassadeira', function(req, res) {
+    var id = req.params.idPassadeira;
+    Cars.passadeira(id)
+      .then(dados => res.jsonp(dados))
+      .catch(erro => console.log(erro))
+})
+
 //GET ONE BY MATRICULA
 router.get('/cars/matricula/:matriculaCar', function(req, res) {
   var matricula = req.params.matriculaCar;

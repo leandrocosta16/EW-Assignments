@@ -15,6 +15,12 @@ class Queries {
       [id])
   }
 
+  getPassadeira(id) {
+    return this.dao.all(
+      `SELECT * FROM Cars WHERE passadeira_id = ?`,
+      [id])
+  }
+
   getByMatricula(matricula) {
     return this.dao.get(
       `SELECT * FROM Cars WHERE matricula = ?`,

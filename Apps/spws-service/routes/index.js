@@ -8,6 +8,7 @@ const localhost = require('../config/env').passadeiras
 
 //GET ALL OR BY ID
 router.get('/', function(req, res) {
+    //View One by Id
     if(req.query.id) {
         id = req.query.id;
         axios.get(localhost+'/api/passadeiras/' + id)
@@ -18,6 +19,7 @@ router.get('/', function(req, res) {
               res.render('error', {error: erro})
             })
     }
+    //View All
     else {
         axios.get(localhost+'/api/passadeiras')
             .then(dados => {

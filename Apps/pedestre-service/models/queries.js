@@ -15,6 +15,12 @@ class Queries {
       [id])
   }
 
+  getPassadeira(id) {
+    return this.dao.all(
+      `SELECT * FROM Pedestres WHERE passadeira_id = ?`,
+      [id])
+  }
+
   getByEmail(email) {
     return this.dao.get(
       `SELECT * FROM Pedestres WHERE email = ?`,

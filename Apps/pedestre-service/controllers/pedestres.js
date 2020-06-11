@@ -16,6 +16,10 @@ module.exports.one = (id) => {
     return queries.getById(id)
 }
 
+module.exports.passadeira = (id) => {
+    return queries.getPassadeira(id)
+}
+
 module.exports.oneEmail = (email) => {
     return queries.getByEmail(email)
 }

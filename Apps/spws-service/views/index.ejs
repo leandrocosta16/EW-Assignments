@@ -52,6 +52,42 @@
     <p><b>CARROS TOTAL:</b> <%=ficha["totalCars"]%></p>
     <br>
     <p><a href="/form/<%=ficha["id"]%>" class="btn btn-secondary">Update</a> <button type="button" class="btn btn-secondary">Apagar</button></p>
+
+<br><br>
+
+<div>
+<h2>CARROS NA PASSADEIRA:</h2>
+<p id="cars">None</p>
+</div>
+
+<br>
+
+<div>
+<h2>Peões NA PASSADEIRA:</h2>
+<p id="pedestres">None</p>
+</div>
+
+<script>
+  axios.get("http://localhost/api/passadeira/<%=ficha["id"]%>")
+   .then(response => {
+   alert(7)
+    $('#cars').text(response.data);
+  })
+.catch(erro => {
+alert(erro)
+  console.log(erro)
+})
+
+  axios.get("http://localhost/api/passadeira/<%=ficha["id"]%>")
+   .then(response => {
+    $('#pedestres').text(response.data);
+  })
+.catch(erro => {
+alert(erro)
+  console.log(erro)
+})
+</script>
+
 <% } %>
 
 <script>
