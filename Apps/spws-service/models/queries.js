@@ -25,6 +25,12 @@ class Queries {
       [latitude, longitude])
   }
 
+    insertAll(latitude,longitude, nPedestrians, nCars, totalPedestrians, totalCars) {
+    return this.dao.run(
+      'INSERT INTO Passadeiras (latitude, longitude, nPedestrians, nCars, totalPedestrians, totalCars) VALUES (?, ?, ?, ?, ?, ?)',
+      [latitude, longitude, nPedestrians, nCars, totalPedestrians, totalCars])
+  }
+
 
   //UPDATE DATA
   update(id, latitude, longitude) {
@@ -34,6 +40,20 @@ class Queries {
         longitude = ?
       WHERE id = ?`,
       [latitude, longitude, id]
+    )
+  }
+
+  updateAll(id, latitude, longitude, nPedestrians, nCars, totalPedestrians, totalCars) {
+    return this.dao.run(
+      `UPDATE Passadeiras
+      SET latitude = ?,
+        longitude = ?,
+        nPedestrians = ?,
+        nCars = ?,
+        totalPedestrians = ?,
+        totalCars = ?
+      WHERE id = ?`,
+      [latitude, longitude, nPedestrians, nCars, totalPedestrians, totalCars, id]
     )
   }
 

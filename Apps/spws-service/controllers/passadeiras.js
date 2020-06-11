@@ -24,8 +24,16 @@ module.exports.insert = (latitude,longitude) => {
     return queries.insertPassadeira(latitude,longitude)
 }
 
+module.exports.insertAll = (latitude,longitude, nPedestrians, nCars, totalPedestrians, totalCars) => {
+    return queries.insertAll(latitude,longitude, nPedestrians, nCars, totalPedestrians, totalCars)
+}
+
 module.exports.update = (id,latitude,longitude) => {
     return queries.update(id,latitude,longitude)
+}
+
+module.exports.updateAll = (id,latitude,longitude, nPedestrians, nCars, totalPedestrians, totalCars) => {
+    return queries.updateAll(id,latitude, longitude, nPedestrians, nCars, totalPedestrians, totalCars)
 }
 
 module.exports.delete = (id) => {

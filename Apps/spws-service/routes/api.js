@@ -36,10 +36,25 @@ router.post('/passadeiras', function(req, res) {
       .catch(erro => res.status(500).jsonp(erro))
 })
 
+//O anterior só adiciona lat e long. Este adiciona todos os campos
+router.post('/new', function(req, res) {
+    Passadeiras.insertAll(req.body.latitude,req.body.longitude, req.body.nPedestrians, req.body.nCars, req.body.totalPedestrians, req.body.totalCars)
+      .then(dados => res.jsonp(dados))
+      .catch(erro => res.status(500).jsonp(erro))
+})
+
 //UPDATE
 router.put('/passadeiras/:idPassadeira', function(req, res) {
     var id = req.params.idPassadeira;
     Passadeiras.update(id, req.body.latitude, req.body.longitude)
+      .then(dados => res.jsonp(dados))
+      .catch(erro => res.status(500).jsonp(erro))
+})
+
+//O anterior só update lat e long. Este update todos os campos
+router.put('/update/:idPassadeira', function(req, res) {
+    var id = req.params.idPassadeira;
+    Passadeiras.updateAll(id, req.body.latitude, req.body.longitude, req.body.nPedestrians, req.body.nCars, req.body.totalPedestrians, req.body.totalCars)
       .then(dados => res.jsonp(dados))
       .catch(erro => res.status(500).jsonp(erro))
 })
