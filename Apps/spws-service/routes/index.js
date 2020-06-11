@@ -31,6 +31,9 @@ router.get('/', function(req, res) {
     }
 })
 
+
+
+
 //FORM FOR UPDATE
 router.get('/form/:idPassadeira', function(req, res) {
     var id = req.params.idPassadeira;
