@@ -92,6 +92,20 @@ resetCounts(id) {
     )
   }
 
+  totalCars(id) {
+    return this.dao.run(
+      `UPDATE Passadeiras SET totalCars = totalCars+1 WHERE id = ?`,
+      [id]
+    )
+  }
+
+  totalPedestres(id) {
+    return this.dao.run(
+      `UPDATE Passadeiras SET totalPedestrians = totalPedestrians+1 WHERE id = ?`,
+      [id]
+    )
+  }
+
   minusPedestre(id) {
     return this.dao.run(
       `UPDATE Passadeiras SET nPedestrians = nPedestrians - 1 WHERE id = ?`,

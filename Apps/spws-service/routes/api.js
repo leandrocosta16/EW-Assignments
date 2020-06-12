@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 const axios = require('axios');
 const geolib = require('geolib');
+var fs = require('fs');
+var path = require('path');
+const localhost = require('../config/env').passadeiras;
 
 var Passadeiras = require('../controllers/passadeiras');
 
@@ -52,7 +55,7 @@ router.put('/passadeiras/:idPassadeira', function(req, res) {
 })
 
 //O anterior só update lat e long. Este update todos os campos
-router.put('/update/:idPassadeira', function(req, res) {
+router.put('/update/:idPassadeira', function(req, res) {totalPedestres
     var id = req.params.idPassadeira;
     Passadeiras.updateAll(id, req.body.latitude, req.body.longitude, req.body.nPedestrians, req.body.nCars, req.body.totalPedestrians, req.body.totalCars)
       .then(dados => res.jsonp(dados))
@@ -127,6 +130,79 @@ let randomColor = choiceColor[Math.floor(Math.random() * choiceColor.length)];
 return randomColor;
 }
 
+router.put('/totalCars', function(req,res){
+    /*var passadeira = req.body.passadeira_id;
+    var lat = req.body.latitude;
+    var long = req.body.longitude;
+    var matr = req.body.matricula;*/
+    var body = JSON.stringify(req.body);
+  Passadeiras.totalCars(req.body.passadeira_id)
+  .then(dados => {
+    let file = path.join(__dirname, 'totalCars.js');
+    fs.readFile(file, 'utf8', function readFileCallback(err, data){
+        if (err){
+            console.log(err);
+        } else {
+        let fileJson = JSON.parse(data);//now it an object
+        let obj = JSON.parse(body);
+        //ADD TIME
+        obj.hora = new Date().toString();
+        console.log(obj)
+        fileJson.push(obj)
+        json = JSON.stringify(fileJson); //convert it back to json
+        //fs.writeFile(file, json, 'utf8', callback); // write it back 
+        fs.writeFile(file, json, 'utf8', function writeFileCallback(err, data){res.sendStatus(200)}); 
+    }});
+
+  })
+  .catch(erro => console.log(erro))
+})
+
+
+router.get('/json/:Type', function(req,res){
+      if(req.params.Type == 'cars') {
+        var fName = 'totalCars.js';
+      }
+      else {
+        var fName = 'totalPedestres.js';
+      }
+      
+      let file = path.join(__dirname, fName);
+      fs.readFile(file, 'utf8', function readFileCallback(err, data){
+          if (err){
+              console.log(err);
+          } else {
+          let fileJson = JSON.parse(data);//now it an object
+          let json = JSON.stringify(fileJson); //convert it back to json
+          res.jsonp(fileJson);
+      }});
+})
+
+router.put('/totalPedestres', function(req,res){
+    var body = JSON.stringify(req.body);
+  Passadeiras.totalPedestres(req.body.passadeira_id)
+  .then(dados => {
+    let file = path.join(__dirname, 'totalPedestres.js');
+    fs.readFile(file, 'utf8', function readFileCallback(err, data){
+        if (err){
+            console.log(err);
+        } else {
+        let fileJson = JSON.parse(data);//now it an object
+        let obj = JSON.parse(body);
+        //ADD TIME
+        obj.hora = new Date().toString();
+        console.log(obj)
+        fileJson.push(obj)
+        json = JSON.stringify(fileJson); //convert it back to json
+        //fs.writeFile(file, json, 'utf8', callback); // write it back 
+        fs.writeFile(file, json, 'utf8', function writeFileCallback(err, data){res.sendStatus(200)}); 
+    }});
+
+    //res.sendStatus(200)
+  })
+  .catch(erro => console.log(erro))
+})
+
 router.put('/minusCar', function(req,res){
   Passadeiras.minusCar(req.body.passadeira_id)
   .then(dados => res.sendStatus(200))
@@ -134,6 +210,7 @@ router.put('/minusCar', function(req,res){
 })
 
 router.put('/plusCar', function(req,res){
+  let passadeira = req.body.passadeira_id;
   Passadeiras.plusCar(req.body.passadeira_id)
   .then(dados => res.sendStatus(200))
   .catch(erro => console.log(erro))
@@ -146,6 +223,7 @@ router.put('/minusPedestre', function(req,res){
 })
 
 router.put('/plusPedestre', function(req,res){
+  let passadeira = req.body.passadeira_id;
   Passadeiras.plusPedestre(req.body.passadeira_id)
   .then(dados => res.sendStatus(200))
   .catch(erro => console.log(erro))

@@ -32,7 +32,16 @@ router.get('/', function(req, res) {
 })
 
 
-
+router.get('/test', function(req, res) {
+axios.get("http://localhost:8080/api/passadeira/7")
+   .then(response => {
+    res.render('test', {ficha: JSON.stringify(response.data)});
+    //$('#pedestres').text(response.data);
+  })
+.catch(erro => {
+  console.log(erro)
+})
+})
 
 //FORM FOR UPDATE
 router.get('/form/:idPassadeira', function(req, res) {

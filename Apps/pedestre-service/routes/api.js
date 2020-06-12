@@ -38,10 +38,17 @@ router.get('/pedestres/email/:emailPedestre', function(req, res) {
 //POST
 router.post('/pedestres', function(req, res) {
   var passadeira = req.body.passadeira_id;
+    var lat = req.body.latitude;
+    var long = req.body.longitude;
+    var mail = req.body.email;
   Pedestres.insert(req.body.latitude,req.body.longitude, req.body.email, req.body.passadeira_id)
   .then(dados => {
       axios.put(lhostSPWS+'/api/plusPedestre', {passadeira_id: passadeira})
-      .then(dados => res.sendStatus(200))
+      .then(dados => {
+        axios.put(lhostSPWS+'/api/totalPedestres', {passadeira_id: passadeira, latitude: lat, longitude: long, email: mail})
+        .then(dados => res.sendStatus(200))
+        .catch(erro => console.log(error))
+      })
       .catch(erro => console.log(error))
   })
   .catch(erro => console.log(error))

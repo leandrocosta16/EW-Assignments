@@ -39,11 +39,20 @@ router.get('/cars/matricula/:matriculaCar', function(req, res) {
 //POST
 router.post('/cars', function(req, res) {
     var passadeira = req.body.passadeira_id;
+    var lat = req.body.latitude;
+    var long = req.body.longitude;
+    var matr = req.body.matricula;
     Cars.insert(req.body.latitude,req.body.longitude, req.body.matricula, req.body.passadeira_id)
     .then(dados => {
         axios.put(lhostSPWS+'/api/plusCar', {passadeira_id: passadeira})
-        .then(dados => res.sendStatus(200))
+        .then(dados => {
+          axios.put(lhostSPWS+'/api/totalCars', {passadeira_id: passadeira, latitude: lat, longitude: long, matricula: matr})
+          .then(dados => res.sendStatus(200))
+          .catch(erro => console.log(error))
+        })
         .catch(erro => console.log(error))
+
+
     })
     .catch(erro => console.log(error))
 })

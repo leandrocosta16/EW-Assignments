@@ -1,0 +1,40 @@
+<%- include('header'); -%>
+
+    <h1 style="border-color:#333333;padding:5px 0px;">TESTE</h1>
+    
+    <br />
+    
+
+
+---
+<br>
+<%=ficha%>
+
+<br><br>
+<p>NOVO: <button onClick="update()">click</button></p>
+
+
+<div id="pedestres">---</div>
+
+
+<script>
+function update() {
+
+axios({
+  method: 'GET',
+  url: 'http://localhost:8080/api/passadeira/7',
+})
+.then(function (response) {
+    alert(response.data);
+    $('#pedestres').text('tttttt');
+})
+.catch(function (error) {
+alert(erro)
+    console.log(erro)
+});
+
+}
+
+</script>
+
+<%- include('footer'); -%>

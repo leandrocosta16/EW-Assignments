@@ -48,6 +48,15 @@ module.exports.plusCar = (id) => {
     return queries.plusCar(id)
 }
 
+module.exports.totalCars = (id) => {
+    return queries.totalCars(id)
+}
+
+module.exports.totalPedestres = (id) => {
+    return queries.totalPedestres(id)
+}
+
+
 module.exports.plusPedestre = (id) => {
     return queries.plusPedestre(id)
 }
